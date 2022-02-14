@@ -25,9 +25,9 @@ export default function Auth() {
         <p className="">Sign in via magic link with your email below</p>
         <div>
           <input
-            className=""
+            className="input"
             type="email"
-            placeholder="Your email"
+            placeholder="Din email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -38,10 +38,10 @@ export default function Auth() {
               e.preventDefault()
               handleLogin(email)
             }}
-            className=""
+            className="btn btn-primary"
             disabled={loading}
           >
-            <span>{loading ? 'Loading' : 'Send magic link'}</span>
+            <span>{loading ? 'Loading' : 'Skicka magisk länk'}</span>
           </button>
         </div>
       </div>

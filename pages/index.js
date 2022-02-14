@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import Auth from '../components/Auth'
 import Account from '../components/Account'
+import CreateLdb from '../components/CreateLdb'
 
 export default function Home() {
   const [session, setSession] = useState(null)
@@ -21,6 +22,7 @@ export default function Home() {
       ) : (
         <Account key={session.user.id} session={session} />
       )}
+      <CreateLdb />
     </div>
   )
 }
