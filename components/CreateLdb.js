@@ -1,38 +1,60 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { players } from '../data/players'
 import { columns } from '../data/tableColumns'
 import { pointSystem } from '../data/pointsystem'
 
 export default function CreateLdb() {
-  const [tablelist, setTablelist] = useState({ gamerTag: '', test: '' })
+  const [selectedName, setSelectedName] = useState({})
+  const [isNameSelected, setIsNameSelected] = useState(false)
+  const [isPositionSelected, setIsPositionSelected] = useState(false)
+  const [selectedPosition, setSelectedPosition] = useState({ position: 0 })
+  const [rows, setRows] = useState([])
+  const [positions, setPositions] = useState([1, 2, 3, 4])
+  const [selectablePlayers, setSelectablePlayers] = useState(players)
 
-  let selectedPlayerID
-
-  function filterID(playerId) {
-    selectedPlayerID = playerId
+  const handleNameChange = (e) => {
+    console.log(selectablePlayers)
+    const name = e.target.value
+    setSelectedName(name)
+    // const newSelectablePlayers = selectablePlayers.filter(
+    //   (player) => player !== name
+    // )
+    setIsNameSelected(true)
+    // return (selectablePlayers = newSelectablePlayers)
+  }
+  const handlePositionChange = (e) => {
+    const position = e.target.value
+    setSelectedPosition(position)
+    setIsPositionSelected(true)
   }
 
-  function filterPlayer(e) {
+  let newListPlayers
+  let newListPosition
+  const handleSubmit = (e) => {
     e.preventDefault()
-    //console.log(selectedPlayerID)
-    players.filter((selP) => {
-      let id = `${selP.gamerTag}`
-      if (id === selectedPlayerID) {
-        setTablelist({ ...tablelist, gamerTag: id, test: 'test' })
-      }
-    })
-    console.log(tablelist)
+    setRows([...rows, { gamerTag: selectedName, position: selectedPosition }])
+    setIsPositionSelected(false)
+    setIsNameSelected(false)
+    setSelectedName('')
+    setSelectedPosition('')
+    newListPlayers = selectablePlayers.filter(
+      (selPlayer) => selPlayer.gamerTag !== selectedName
+    )
+    setSelectablePlayers(newListPlayers)
+    //setPositions(newListPosition)
   }
   return (
     <div className="mt-10">
-      <form onSubmit={filterPlayer} className="m-auto w-full">
+      <form onSubmit={handleSubmit} className="m-auto w-full">
         <select
           className="select select-bordered ml-4"
           name="players"
           id="players"
-          onChange={(e) => filterID(e.target.value)}
+          value={selectedName}
+          onChange={handleNameChange}
         >
-          {players.map((player) => (
+          {!isNameSelected && <option>Välj namn</option>}
+          {selectablePlayers.map((player) => (
             <option value={player.gamerTag} key={player.id}>
               {player.gamerTag}
             </option>
@@ -42,7 +64,14 @@ export default function CreateLdb() {
           className="select select-bordered ml-4"
           name="position"
           id="postionValue"
-        ></select>
+          value={selectedPosition}
+          onChange={handlePositionChange}
+        >
+          {!isPositionSelected && <option>Välj position</option>}
+          {positions.map((position, index) => (
+            <option key={index}>{position}</option>
+          ))}
+        </select>
 
         <button className="btn mx-4">Lägg till</button>
       </form>
@@ -55,11 +84,13 @@ export default function CreateLdb() {
           </tr>
         </thead>
         <tbody>
-          {players.map((player) => {
+          {rows.map((row) => {
             return (
-              <tr key={player.id}>
+              <tr key={row.gamerTag}>
                 {columns.map((column) => (
-                  <td key={column.accessor}>{player[column.accessor]}</td>
+                  <td className={row[column.accessor]} key={column.accessor}>
+                    {row[column.accessor]}
+                  </td>
                   //columns.accessor = player.gamerTag
                   // player.colums.accessor
                 ))}
