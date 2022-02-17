@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import { players } from '../data/players'
-import { columns } from '../data/tableColumns'
-import { pointSystem } from '../data/pointsystem'
+import { players } from '../../data/players'
+import { columns } from '../../data/tableColumns'
+import { selectName, checkName, checkPos, selectPosition, selectRow, setPos, checkPlayers } from './LbdStates';
+//import { pointSystem } from '../../data/pointsystem'
 
 export default function CreateLdb() {
-  const [selectedName, setSelectedName] = useState({})
-  const [isNameSelected, setIsNameSelected] = useState(false)
-  const [isPositionSelected, setIsPositionSelected] = useState(false)
-  const [selectedPosition, setSelectedPosition] = useState({ position: 0 })
-  const [rows, setRows] = useState([])
-  const [positions, setPositions] = useState([1, 2, 3, 4])
-  const [selectablePlayers, setSelectablePlayers] = useState(players)
+  const [selectedName, setSelectedName] = selectName()
+  const [isNameSelected, setIsNameSelected] = checkName()
+  const [isPositionSelected, setIsPositionSelected] = checkPos()
+  const [selectedPosition, setSelectedPosition] = selectPosition()
+  const [rows, setRows] = selectRow()
+  const [positions, setPositions] = setPos()
+  const [selectablePlayers, setSelectablePlayers] = checkPlayers()
 
   const handleNameChange = (e) => {
     console.log(selectablePlayers)
