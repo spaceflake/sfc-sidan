@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { players } from '../data/players'
 import { columns } from '../data/tableColumns'
 import { pointSystem } from '../data/pointsystem'
+import Table from './Table'
 
 export default function CreateLdb() {
   const [selectedName, setSelectedName] = useState({})
@@ -11,9 +12,20 @@ export default function CreateLdb() {
   const [rows, setRows] = useState([])
   const [positions, setPositions] = useState([1, 2, 3, 4])
   const [selectablePlayers, setSelectablePlayers] = useState(players)
+  const [tables, setTables] = useState([])
+
+  function addNewTable(row) {
+    // const newHeat = {
+    //   name: `Heat${tables.length + 1}`,
+    //   heatRow: row,
+    // }
+    let newTables = tables
+    newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: row })
+    setTables(newTables)
+    console.log(tables)
+  }
 
   const handleNameChange = (e) => {
-    console.log(selectablePlayers)
     const name = e.target.value
     setSelectedName(name)
     // const newSelectablePlayers = selectablePlayers.filter(
@@ -32,7 +44,14 @@ export default function CreateLdb() {
   let newListPosition
   const handleSubmit = (e) => {
     e.preventDefault()
-    setRows([...rows, { gamerTag: selectedName, position: selectedPosition }])
+    setRows([
+      ...rows,
+      {
+        gamerTag: selectedName,
+        position: selectedPosition,
+        points: getPoints(selectedPosition),
+      },
+    ])
     setIsPositionSelected(false)
     setIsNameSelected(false)
     setSelectedName('')
@@ -40,12 +59,22 @@ export default function CreateLdb() {
     newListPlayers = selectablePlayers.filter(
       (selPlayer) => selPlayer.gamerTag !== selectedName
     )
+    newListPosition = positions.filter(
+      (removePos) => removePos != selectedPosition
+    )
+
     setSelectablePlayers(newListPlayers)
-    //setPositions(newListPosition)
+    setPositions(newListPosition)
+    if (selectablePlayers.length === 1) {
+      addNewTable(rows)
+    }
   }
   return (
     <div className="mt-10">
-      <form onSubmit={handleSubmit} className="m-auto w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="m-auto w-1/2 bg-slate-800 p-6 rounded-md"
+      >
         <select
           className="select select-bordered ml-4"
           name="players"
@@ -53,7 +82,11 @@ export default function CreateLdb() {
           value={selectedName}
           onChange={handleNameChange}
         >
-          {!isNameSelected && <option>Välj namn</option>}
+          {!isNameSelected && (
+            <option>
+              {selectablePlayers.length === 0 ? ' - tom - ' : 'Välj namn'}
+            </option>
+          )}
           {selectablePlayers.map((player) => (
             <option value={player.gamerTag} key={player.id}>
               {player.gamerTag}
@@ -73,37 +106,48 @@ export default function CreateLdb() {
           ))}
         </select>
 
-        <button className="btn mx-4">Lägg till</button>
+        <button className="btn btn-accent mx-4">Lägg till</button>
+        <button className="btn mx-4 btn-secondary" disabled>
+          Skapa nytt heat
+        </button>
       </form>
-      <table className="table w-1/2 mx-auto mt-2">
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <th key={column.accessor}>{column.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => {
-            return (
-              <tr key={row.gamerTag}>
-                {columns.map((column) => (
-                  <td className={row[column.accessor]} key={column.accessor}>
-                    {row[column.accessor]}
-                  </td>
-                  //columns.accessor = player.gamerTag
-                  // player.colums.accessor
-                ))}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      {selectablePlayers.length === 0 ? (
+        // HÄR VI VILL MAPPA TABLES
+        <div>
+          {tables.map((table) => (
+            <Table key={table.name} rows={table.heatRow} />
+          ))}
+        </div>
+      ) : (
+        <table className="table w-1/2 mx-auto mt-2 PREVIEW">
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <th key={column.accessor}>{column.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              return (
+                <tr key={row.gamerTag}>
+                  {columns.map((column) => (
+                    <td className={row[column.accessor]} key={column.accessor}>
+                      {row[column.accessor]}
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   )
 }
 
-/*
-    form: 
-    
- */
+function getPoints(playerPosition) {
+  playerPosition -= 1
+  let point = pointSystem.points[playerPosition]
+  return point
+}

@@ -1,18 +1,18 @@
 export const columns = [
   {
     accessor: 'gamerTag',
-    label: 'Name',
+    label: 'Förare',
   },
   {
     accessor: 'position',
-    label: 'Position',
+    label: 'Heat position',
+  },
+  {
+    accessor: 'points',
+    label: 'Poäng',
   },
 ]
 
-// {
-//   accessor: 'points',
-//   label: 'Poäng',
-// },
 // {
 //   accessor: 'event1',
 //   label: 'Heat1',
