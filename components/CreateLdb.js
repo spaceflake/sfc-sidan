@@ -70,10 +70,10 @@ export default function CreateLdb() {
     }
   }
   return (
-    <div className="mt-10">
+    <div className="mt-10 bg-base-100 p-8">
       <form
         onSubmit={handleSubmit}
-        className="m-auto w-1/2 bg-slate-800 p-6 rounded-md"
+        className=" m-auto max-w-3xl bg-base-200 p-6 rounded-md shadow-lg mb-4"
       >
         <select
           className="select select-bordered ml-4"
@@ -100,11 +100,29 @@ export default function CreateLdb() {
           value={selectedPosition}
           onChange={handlePositionChange}
         >
-          {!isPositionSelected && <option>Välj position</option>}
+          {!isPositionSelected && <option selected>Välj position</option>}
           {positions.map((position, index) => (
             <option key={index}>{position}</option>
           ))}
         </select>
+        <label htmlFor="dns">
+          dns
+          <input
+            type="checkbox"
+            name="dns"
+            id="dns"
+            className="checkbox cursor-pointer"
+          />
+        </label>
+        <label htmlFor="dnf">
+          dns
+          <input
+            type="checkbox"
+            name="dnf"
+            id="dnf"
+            className="checkbox cursor-pointer"
+          />
+        </label>
 
         <button className="btn btn-accent mx-4">Lägg till</button>
         <button className="btn mx-4 btn-secondary" disabled>

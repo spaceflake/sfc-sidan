@@ -19,11 +19,18 @@ export default function Auth() {
   }
 
   return (
-    <div className="">
-      <div className="">
-        <h1 className="">Supabase + Next.js</h1>
-        <p className="">Sign in via magic link with your email below</p>
-        <div>
+    <div className="card bg-base-200 max-w-sm shadow-lg">
+      <div className="card-body">
+        <h1 className="text-center text-3xl font-bold mb-6 uppercase">
+          Logga in
+        </h1>
+        <p className=" font-light">
+          Logga in via en magisk länk. Ange din email nedan.
+        </p>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Email</span>
+          </label>
           <input
             className="input"
             type="email"
@@ -32,7 +39,7 @@ export default function Auth() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
+        <div className="form-control mt-6">
           <button
             onClick={(e) => {
               e.preventDefault()
