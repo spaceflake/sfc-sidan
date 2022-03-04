@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { players } from '../data/players'
-import { columns } from '../data/tableColumns'
-import { pointSystem } from '../data/pointsystem'
-import Table from './Table'
+import { players } from '../../data/players'
+import { columns } from '../../data/tableColumns'
+import { pointSystem } from '../../data/pointsystem'
+import Table from '../../components/Table'
 
 export default function CreateLdb() {
   const [selectedName, setSelectedName] = useState({})
@@ -70,7 +70,7 @@ export default function CreateLdb() {
     }
   }
   return (
-    <div className="mt-10 bg-base-100 p-8">
+    <div className="mt-10 bg-base-100 p-8 flex-1">
       <form
         onSubmit={handleSubmit}
         className=" m-auto max-w-3xl bg-base-200 p-6 rounded-md shadow-lg mb-4"
@@ -132,9 +132,10 @@ export default function CreateLdb() {
       {selectablePlayers.length === 0 ? (
         // HÄR VI VILL MAPPA TABLES
         <div>
-          {tables.map((table) => (
-            <Table key={table.name} rows={table.heatRow} />
-          ))}
+          {tables &&
+            tables.map((table) => (
+              <Table key={table.name} rows={table.heatRow} />
+            ))}
         </div>
       ) : (
         <table className="table w-1/2 mx-auto mt-2 PREVIEW">

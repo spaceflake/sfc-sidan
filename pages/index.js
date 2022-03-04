@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
-import Auth from '../components/Auth'
 import Account from '../components/Account'
-import CreateLdb from '../components/CreateLdb'
 import Head from 'next/head'
 
 export default function Home() {
@@ -29,13 +27,12 @@ export default function Home() {
           content="Sveriges bästa och roligaste online racing liga, SFC - Swedish Forza Championship. Vi kör Forza Motorsport 7."
         ></meta>
       </Head>
-      <div className=" bg-base-100">
+      <div className="flex-1 bg-base-100">
         {!session ? (
-          <Auth />
+          <div>Startsida ej inloggad - logga in</div>
         ) : (
           <Account key={session.user.id} session={session} />
         )}
-        <CreateLdb />
       </div>
     </>
   )
