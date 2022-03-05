@@ -10,9 +10,19 @@ export default function CreateLdb() {
   const [isPositionSelected, setIsPositionSelected] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState({ position: 0 })
   const [rows, setRows] = useState([])
-  const [positions, setPositions] = useState([1, 2, 3, 4])
+  const [positions, setPositions] = useState(null)
   const [selectablePlayers, setSelectablePlayers] = useState(players)
   const [tables, setTables] = useState([])
+
+  useEffect(() => {
+    const newPositionsList = []
+    let count
+    for (let i = 1; i < players.length + 1; i++) {
+      count = i
+      newPositionsList.push(count)
+    }
+    setPositions(newPositionsList)
+  }, [])
 
   function addNewTable(row) {
     // const newHeat = {
@@ -42,6 +52,7 @@ export default function CreateLdb() {
 
   let newListPlayers
   let newListPosition
+
   const handleSubmit = (e) => {
     e.preventDefault()
     setRows([
@@ -66,7 +77,7 @@ export default function CreateLdb() {
     setSelectablePlayers(newListPlayers)
     setPositions(newListPosition)
     if (selectablePlayers.length === 1) {
-      addNewTable(rows)
+      addNewTable(rows.sort((a, b) => b.points - a.points))
     }
   }
   return (
@@ -101,9 +112,10 @@ export default function CreateLdb() {
           onChange={handlePositionChange}
         >
           {!isPositionSelected && <option selected>Välj position</option>}
-          {positions.map((position, index) => (
-            <option key={index}>{position}</option>
-          ))}
+          {positions &&
+            positions.map((position, index) => (
+              <option key={index}>{position}</option>
+            ))}
         </select>
         <label htmlFor="dns">
           dns
@@ -129,38 +141,36 @@ export default function CreateLdb() {
           Skapa nytt heat
         </button>
       </form>
-      {selectablePlayers.length === 0 ? (
-        // HÄR VI VILL MAPPA TABLES
-        <div>
-          {tables &&
-            tables.map((table) => (
-              <Table key={table.name} rows={table.heatRow} />
+
+      <table className="table w-1/2 mx-auto mt-2 PREVIEW">
+        <thead>
+          <tr>
+            {columns.map((column) => (
+              <th key={column.accessor}>{column.label}</th>
             ))}
-        </div>
-      ) : (
-        <table className="table w-1/2 mx-auto mt-2 PREVIEW">
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th key={column.accessor}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
+          </tr>
+        </thead>
+        <tbody>
+          {rows &&
+            rows.map((row) => {
               return (
-                <tr key={row.gamerTag}>
+                <tr key={row.id}>
                   {columns.map((column) => (
-                    <td className={row[column.accessor]} key={column.accessor}>
-                      {row[column.accessor]}
-                    </td>
+                    <td key={row.id}>{row[column.accessor]}</td>
                   ))}
                 </tr>
               )
             })}
-          </tbody>
-        </table>
-      )}
+        </tbody>
+      </table>
+
+      {tables &&
+        tables.map((table) => (
+          <div key={table.name} className="flex flex-col">
+            <h2 className="m-auto">{table.name}</h2>
+            <Table rows={table.heatRow} />
+          </div>
+        ))}
     </div>
   )
 }
