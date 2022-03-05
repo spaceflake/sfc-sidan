@@ -5,10 +5,10 @@ import { pointSystem } from '../../data/pointsystem'
 import Table from '../../components/Table'
 
 export default function CreateLdb() {
-  const [selectedName, setSelectedName] = useState({})
+  const [selectedName, setSelectedName] = useState(null)
   const [isNameSelected, setIsNameSelected] = useState(false)
   const [isPositionSelected, setIsPositionSelected] = useState(false)
-  const [selectedPosition, setSelectedPosition] = useState({ position: 0 })
+  const [selectedPosition, setSelectedPosition] = useState(null)
   const [rows, setRows] = useState([])
   const [positions, setPositions] = useState(null)
   const [selectablePlayers, setSelectablePlayers] = useState(players)
