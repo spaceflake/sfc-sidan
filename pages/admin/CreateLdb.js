@@ -5,10 +5,10 @@ import { pointSystem } from '../../data/pointsystem'
 import Table from '../../components/Table'
 
 export default function CreateLdb() {
-  const [selectedName, setSelectedName] = useState(null)
+  const [selectedName, setSelectedName] = useState('välj namn')
   const [isNameSelected, setIsNameSelected] = useState(false)
   const [isPositionSelected, setIsPositionSelected] = useState(false)
-  const [selectedPosition, setSelectedPosition] = useState(null)
+  const [selectedPosition, setSelectedPosition] = useState('välj position')
   const [rows, setRows] = useState([])
   const [positions, setPositions] = useState(null)
   const [selectablePlayers, setSelectablePlayers] = useState(players)
@@ -29,7 +29,7 @@ export default function CreateLdb() {
     //   name: `Heat${tables.length + 1}`,
     //   heatRow: row,
     // }
-    let newTables = tables
+    const newTables = tables
     newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: row })
     setTables(newTables)
     console.log(tables)
