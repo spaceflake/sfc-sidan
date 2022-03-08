@@ -10,51 +10,37 @@ export default function CreateLdb() {
   const [isPositionSelected, setIsPositionSelected] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState('välj position')
   const [rows, setRows] = useState([])
-  const [positions, setPositions] = useState(null)
+  const [positions, setPositions] = useState([])
   const [selectablePlayers, setSelectablePlayers] = useState(players)
   const [tables, setTables] = useState([])
 
   useEffect(() => {
+    positionsList()
+  }, [])
+
+  const positionsList = () => {
     const newPositionsList = []
     let count
     for (let i = 1; i < players.length + 1; i++) {
       count = i
       newPositionsList.push(count)
     }
-    setPositions(newPositionsList)
-  }, [])
+    return setPositions(newPositionsList)
+  }
 
-  function addNewTable(row) {
-    // const newHeat = {
-    //   name: `Heat${tables.length + 1}`,
-    //   heatRow: row,
-    // }
-    const newTables = tables
-    newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: row })
+  function addNewTable(rows) {
+    const newTables = [...tables]
+    newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: rows })
     setTables(newTables)
-    console.log(tables)
   }
 
-  const handleNameChange = (e) => {
-    const name = e.target.value
-    setSelectedName(name)
-    // const newSelectablePlayers = selectablePlayers.filter(
-    //   (player) => player !== name
-    // )
-    setIsNameSelected(true)
-    // return (selectablePlayers = newSelectablePlayers)
-  }
   const handlePositionChange = (e) => {
     const position = e.target.value
     setSelectedPosition(position)
     setIsPositionSelected(true)
   }
 
-  let newListPlayers
-  let newListPosition
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleAdd = () => {
     setRows([
       ...rows,
       {
@@ -63,21 +49,29 @@ export default function CreateLdb() {
         points: getPoints(selectedPosition),
       },
     ])
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     setIsPositionSelected(false)
     setIsNameSelected(false)
     setSelectedName('')
     setSelectedPosition('')
-    newListPlayers = selectablePlayers.filter(
+    const newListPlayers = selectablePlayers.filter(
       (selPlayer) => selPlayer.gamerTag !== selectedName
     )
-    newListPosition = positions.filter(
+    const newListPosition = positions.filter(
       (removePos) => removePos != selectedPosition
     )
 
     setSelectablePlayers(newListPlayers)
     setPositions(newListPosition)
     if (selectablePlayers.length === 1) {
-      addNewTable(rows.sort((a, b) => b.points - a.points))
+      const sortedRows = rows.sort((a, b) => b.points - a.points)
+      addNewTable(sortedRows)
+      setSelectablePlayers(players)
+      setPositions(positionsList())
+      setRows([])
     }
   }
   return (
@@ -91,7 +85,10 @@ export default function CreateLdb() {
           name="players"
           id="players"
           value={selectedName}
-          onChange={handleNameChange}
+          onChange={(e) => {
+            setSelectedName(e.target.value)
+            setIsNameSelected(true)
+          }}
         >
           {!isNameSelected && (
             <option>
@@ -136,33 +133,15 @@ export default function CreateLdb() {
           />
         </label>
 
-        <button className="btn btn-accent mx-4">Lägg till</button>
+        <button onClick={handleAdd} className="btn btn-accent mx-4">
+          Lägg till
+        </button>
         <button className="btn mx-4 btn-secondary" disabled>
           Skapa nytt heat
         </button>
       </form>
 
-      <table className="table w-1/2 mx-auto mt-2 PREVIEW">
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <th key={column.accessor}>{column.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows &&
-            rows.map((row) => {
-              return (
-                <tr key={row.id}>
-                  {columns.map((column) => (
-                    <td key={row.id}>{row[column.accessor]}</td>
-                  ))}
-                </tr>
-              )
-            })}
-        </tbody>
-      </table>
+      {rows && <Table rows={rows} />}
 
       {tables &&
         tables.map((table) => (
