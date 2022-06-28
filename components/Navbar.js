@@ -1,8 +1,21 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Auth from './Auth'
+import Login from './Auth'
+import { supabase } from '../utils/supabaseClient'
+
+import { useState, useEffect } from 'react'
 
 const Navbar = () => {
+  const [session, setSession] = useState(null)
+
+  useEffect(() => {
+    setSession(supabase.auth.session())
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+  }, [session])
+
   return (
     <nav className="navbar bg-base-300 ">
       <div className="flex justify-between w-full">
@@ -15,17 +28,27 @@ const Navbar = () => {
             className=" cursor-pointer"
           />
         </Link>
-        <h1 className="text-xl ">SFC - Swedish Forza Championship</h1>
+        <h1 className="text-xl text-white">SFC - Swedish Forza Championship</h1>
         <div className=" space-x-4">
           <Link href="/admin">ADMIN</Link>
-          <div className="dropdown dropdown-end">
-            <label tabIndex="0" className="btn m-1">
-              Logga In
-            </label>
-            <div tabIndex="0" className="dropdown-content">
-              <Auth />
+          <Link href="/profile">PROFIL</Link>
+          {session ? (
+            <button
+              className="btn btn-primary"
+              onClick={() => supabase.auth.signOut()}
+            >
+              Logga ut
+            </button>
+          ) : (
+            <div className="dropdown dropdown-end">
+              <label tabIndex="0" className="btn m-1">
+                Logga In
+              </label>
+              <div tabIndex="0" className="dropdown-content">
+                <Login />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </nav>
