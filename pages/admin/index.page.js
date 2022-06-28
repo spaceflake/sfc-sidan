@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 const AdminDashboard = () => {
   return (
@@ -11,10 +11,10 @@ const AdminDashboard = () => {
             update leaderboard
           </span>
         </Link>
-        update leaderboard and other functions
+        other functions
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;
