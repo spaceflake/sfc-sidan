@@ -1,8 +1,8 @@
 import { useState, useId } from 'react'
-import Link from 'next/link'
 import { supabase } from '../utils/supabaseClient'
+import Link from 'next/link'
 
-export default function Login() {
+export default function Register() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -12,9 +12,12 @@ export default function Login() {
   const handleLogin = async (email, pwd) => {
     try {
       setLoading(true)
-      const { error } = await supabase.auth.signIn({ email, password })
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      })
       if (error) throw error
-      alert('Inloggad')
+      alert('Check your email to confirm!')
     } catch (error) {
       alert(error.error_description || error.message)
     } finally {
@@ -26,9 +29,9 @@ export default function Login() {
     <div className="card bg-base-200 max-w-md shadow-lg">
       <div className="card-body">
         <h1 className="text-center text-3xl font-bold mb-6 uppercase">
-          Logga in
+          Skapa konto
         </h1>
-        <p className=" font-light">Ange din email och lösenord.</p>
+        <p className=" font-light">Fyll i uppgifterna nedan.</p>
         <div className="form-control">
           <label htmlFor={id + '-email'} className="label">
             <span className="label-text">Email</span>
@@ -62,13 +65,15 @@ export default function Login() {
             className="btn btn-primary"
             disabled={loading}
           >
-            <span>{loading ? 'Loading' : 'Logga in'}</span>
+            <span>{loading ? 'Loading' : 'Skicka'}</span>
           </button>
         </div>
-        <p>Inget konto än?</p>
-        <Link href="/signup">
-          <a>Skapa konto</a>
-        </Link>
+        <p>
+          Har du redan ett konto?{' '}
+          <Link href="/signin">
+            <a>logga in</a>
+          </Link>
+        </p>
       </div>
     </div>
   )

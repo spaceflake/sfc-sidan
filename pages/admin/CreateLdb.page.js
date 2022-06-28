@@ -5,45 +5,42 @@ import { pointSystem } from '../../data/pointsystem'
 import Table from '../../components/Table'
 
 export default function CreateLdb() {
-  const [selectedName, setSelectedName] = useState({})
+  const [selectedName, setSelectedName] = useState('välj namn')
   const [isNameSelected, setIsNameSelected] = useState(false)
   const [isPositionSelected, setIsPositionSelected] = useState(false)
-  const [selectedPosition, setSelectedPosition] = useState({ position: 0 })
+  const [selectedPosition, setSelectedPosition] = useState('välj position')
   const [rows, setRows] = useState([])
-  const [positions, setPositions] = useState([1, 2, 3, 4])
+  const [positions, setPositions] = useState([])
   const [selectablePlayers, setSelectablePlayers] = useState(players)
   const [tables, setTables] = useState([])
 
-  function addNewTable(row) {
-    // const newHeat = {
-    //   name: `Heat${tables.length + 1}`,
-    //   heatRow: row,
-    // }
-    let newTables = tables
-    newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: row })
-    setTables(newTables)
-    console.log(tables)
+  useEffect(() => {
+    positionsList()
+  }, [])
+
+  const positionsList = () => {
+    const newPositionsList = []
+    let count
+    for (let i = 1; i < players.length + 1; i++) {
+      count = i
+      newPositionsList.push(count)
+    }
+    return setPositions(newPositionsList)
   }
 
-  const handleNameChange = (e) => {
-    const name = e.target.value
-    setSelectedName(name)
-    // const newSelectablePlayers = selectablePlayers.filter(
-    //   (player) => player !== name
-    // )
-    setIsNameSelected(true)
-    // return (selectablePlayers = newSelectablePlayers)
+  function addNewTable(rows) {
+    const newTables = [...tables]
+    newTables.push({ name: `Heat-${tables.length + 1}`, heatRow: rows })
+    setTables(newTables)
   }
+
   const handlePositionChange = (e) => {
     const position = e.target.value
     setSelectedPosition(position)
     setIsPositionSelected(true)
   }
 
-  let newListPlayers
-  let newListPosition
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleAdd = () => {
     setRows([
       ...rows,
       {
@@ -52,21 +49,29 @@ export default function CreateLdb() {
         points: getPoints(selectedPosition),
       },
     ])
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     setIsPositionSelected(false)
     setIsNameSelected(false)
     setSelectedName('')
     setSelectedPosition('')
-    newListPlayers = selectablePlayers.filter(
+    const newListPlayers = selectablePlayers.filter(
       (selPlayer) => selPlayer.gamerTag !== selectedName
     )
-    newListPosition = positions.filter(
+    const newListPosition = positions.filter(
       (removePos) => removePos != selectedPosition
     )
 
     setSelectablePlayers(newListPlayers)
     setPositions(newListPosition)
     if (selectablePlayers.length === 1) {
-      addNewTable(rows)
+      const sortedRows = rows.sort((a, b) => b.points - a.points)
+      addNewTable(sortedRows)
+      setSelectablePlayers(players)
+      setPositions(positionsList())
+      setRows([])
     }
   }
   return (
@@ -80,7 +85,10 @@ export default function CreateLdb() {
           name="players"
           id="players"
           value={selectedName}
-          onChange={handleNameChange}
+          onChange={(e) => {
+            setSelectedName(e.target.value)
+            setIsNameSelected(true)
+          }}
         >
           {!isNameSelected && (
             <option>
@@ -101,9 +109,10 @@ export default function CreateLdb() {
           onChange={handlePositionChange}
         >
           {!isPositionSelected && <option selected>Välj position</option>}
-          {positions.map((position, index) => (
-            <option key={index}>{position}</option>
-          ))}
+          {positions &&
+            positions.map((position, index) => (
+              <option key={index}>{position}</option>
+            ))}
         </select>
         <label htmlFor="dns">
           dns
@@ -124,43 +133,23 @@ export default function CreateLdb() {
           />
         </label>
 
-        <button className="btn btn-accent mx-4">Lägg till</button>
+        <button onClick={handleAdd} className="btn btn-accent mx-4">
+          Lägg till
+        </button>
         <button className="btn mx-4 btn-secondary" disabled>
           Skapa nytt heat
         </button>
       </form>
-      {selectablePlayers.length === 0 ? (
-        // HÄR VI VILL MAPPA TABLES
-        <div>
-          {tables &&
-            tables.map((table) => (
-              <Table key={table.name} rows={table.heatRow} />
-            ))}
-        </div>
-      ) : (
-        <table className="table w-1/2 mx-auto mt-2 PREVIEW">
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th key={column.accessor}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              return (
-                <tr key={row.gamerTag}>
-                  {columns.map((column) => (
-                    <td className={row[column.accessor]} key={column.accessor}>
-                      {row[column.accessor]}
-                    </td>
-                  ))}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      )}
+
+      {rows && <Table rows={rows} />}
+
+      {tables &&
+        tables.map((table) => (
+          <div key={table.name} className="flex flex-col">
+            <h2 className="m-auto">{table.name}</h2>
+            <Table rows={table.heatRow} />
+          </div>
+        ))}
     </div>
   )
 }

@@ -6,6 +6,8 @@ export default function Account({ session }) {
   const [username, setUsername] = useState(null)
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     getProfile()
@@ -41,18 +43,22 @@ export default function Account({ session }) {
   async function updateProfile({ username, website, avatar_url }) {
     try {
       setLoading(true)
-      const user = supabase.auth.user()
+      // const user = supabase.auth.user();
 
-      const updates = {
-        id: user.id,
-        username,
-        website,
-        avatar_url,
-        updated_at: new Date(),
-      }
+      // const updates = {
+      //   id: user.id,
+      //   username,
+      //   website,
+      //   avatar_url,
+      //   updated_at: new Date(),
+      // };
 
-      let { error } = await supabase.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
+      // let { error } = await supabase.from('profiles').upsert(updates, {
+      //   returning: 'minimal', // Don't return the value after inserting
+      // });
+      const { user, error } = await supabase.auth.update({
+        email,
+        password,
       })
 
       if (error) {
@@ -69,10 +75,24 @@ export default function Account({ session }) {
     <div className="form-widget">
       <div>
         <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={session.user.email} disabled />
+        <input
+          id="email"
+          type="text"
+          value={session?.user?.email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div>
-        <label htmlFor="username">Name</label>
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="text"
+          value={session?.user?.password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="username">Gamertag</label>
         <input
           id="username"
           type="text"
@@ -91,11 +111,7 @@ export default function Account({ session }) {
       </div>
 
       <div>
-        <button
-          className=""
-          onClick={() => updateProfile({ username, website, avatar_url })}
-          disabled={loading}
-        >
+        <button className="" onClick={updateProfile} disabled={loading}>
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>

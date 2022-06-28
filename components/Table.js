@@ -1,9 +1,9 @@
 import { columns } from '../data/tableColumns'
 
-export default function Table(props) {
-  const rows = props.rows
+export default function Table({ rows }) {
+  // console.log(rows)
   return (
-    <table className="table w-1/2 mx-auto mt-2 INTE PREVIEW">
+    <table className="table w-1/2 mx-auto mt-2">
       <thead>
         <tr>
           {columns.map((column) => (
@@ -12,17 +12,14 @@ export default function Table(props) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => {
-          return (
-            <tr key={row.gamerTag}>
+        {rows &&
+          rows.map((row) => (
+            <tr key={row.id}>
               {columns.map((column) => (
-                <td className={row[column.accessor]} key={column.accessor}>
-                  {row[column.accessor]}
-                </td>
+                <td key={row.id}>{row[column.accessor]}</td>
               ))}
             </tr>
-          )
-        })}
+          ))}
       </tbody>
     </table>
   )

@@ -31,4 +31,12 @@ export const players = [
     event2: 20,
     position: 2,
   },
+  {
+    id: 5,
+    gamerTag: 'SFC Snutt',
+    points: 0,
+    event1: 10,
+    event2: 20,
+    position: 5,
+  },
 ]
