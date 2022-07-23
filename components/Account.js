@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import { supabase } from '../utils/supabaseClient'
 
 export default function Account({ session }) {
@@ -9,9 +9,11 @@ export default function Account({ session }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  useEffect(() => {
-    getProfile()
-  }, [session])
+  const id = useId()
+
+  // useEffect(() => {
+  //   getProfile()
+  // }, [session])
 
   async function getProfile() {
     try {
@@ -72,54 +74,75 @@ export default function Account({ session }) {
   }
 
   return (
-    <div className="form-widget">
+    <div className="h-full grid place-content-center bg-slate-800">
       <div>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="text"
-          value={session?.user?.email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="text"
-          value={session?.user?.password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="username">Gamertag</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ''}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          type="website"
-          value={website || ''}
-          onChange={(e) => setWebsite(e.target.value)}
-        />
+        <h1 className=" font-extrabold text-6xl">Din Profil</h1>
+        <p className=" text-purple-500">
+          Kolla dina stats, ändra dina uppgifter.
+        </p>
       </div>
 
-      <div>
-        <button className="" onClick={updateProfile} disabled={loading}>
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
+      <div className="form-control space-y-2 mt-10">
+        <div>
+          <label className=" input-group">
+            <span>Email</span>
+            <input
+              id={id + '-email'}
+              className="input input-bordered"
+              type="text"
+              value={session?.user?.email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label className=" input-group">
+            <span>Password</span>
+            <input
+              id={id + '-password'}
+              className=" input input-bordered"
+              type="text"
+              value={session?.user?.password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label className=" input-group">
+            <span>Gamertag</span>
+            <input
+              id={id + '-username'}
+              className=" input input-bordered"
+              type="text"
+              value={username || ''}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label className=" input-group">
+            <span>Webbsida</span>
+            <input
+              id={id + '-website'}
+              className="input input-bordered"
+              type="website"
+              value={website || ''}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </label>
+        </div>
 
-      <div>
-        <button className="" onClick={() => supabase.auth.signOut()}>
-          Sign Out
-        </button>
+        <div>
+          <button className="btn" onClick={updateProfile} disabled={loading}>
+            {loading ? 'Laddar...' : 'Uppdatera'}
+          </button>
+        </div>
+
+        <div>
+          <button className="btn" onClick={() => supabase.auth.signOut()}>
+            Logga ut
+          </button>
+        </div>
       </div>
     </div>
   )

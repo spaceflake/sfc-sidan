@@ -33,27 +33,23 @@ export default function Home() {
         ></meta>
       </Head>
       <div className="flex flex-col grow bg-base-100">
-        {!session ? (
-          <div className="grow">
-            <Hero />
-            <div className="card w-full max-w-xl bg-base-100 shadow-xl m-auto mt-28">
-              <figure>
-                <Image src={carPic} alt="cars racing" />
-              </figure>
-              <div className="card-body text-neutral-content">
-                <h2 className="card-title">Måndagsligan</h2>
-                <p>Ännu trevligare racing</p>
-                <Link href="/mandagsligan" passHref>
-                  <div className="card-actions justify-start">
-                    <button className="btn btn-link">läs mer...</button>
-                  </div>
-                </Link>
-              </div>
+        <div className="grow">
+          <Hero session={session} />
+          <div className="card w-full max-w-xl bg-base-100 shadow-xl m-auto mt-28">
+            <figure>
+              <Image src={carPic} alt="cars racing" />
+            </figure>
+            <div className="card-body text-neutral-content">
+              <h2 className="card-title">Måndagsligan</h2>
+              <p>Ännu trevligare racing</p>
+              <Link href="/mandagsligan" passHref>
+                <div className="card-actions justify-start">
+                  <button className="btn btn-link">läs mer...</button>
+                </div>
+              </Link>
             </div>
           </div>
-        ) : (
-          <Profile session={session} />
-        )}
+        </div>
       </div>
     </>
   )
