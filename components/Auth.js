@@ -67,7 +67,7 @@ export default function Login() {
         </div>
         <p>Inget konto än?</p>
         <Link href="/signup">
-          <a>Skapa konto</a>
+          <a className=" text-purple-500">Skapa konto</a>
         </Link>
       </div>
     </div>

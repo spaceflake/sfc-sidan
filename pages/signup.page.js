@@ -1,11 +1,11 @@
-import Register from '../components/Register';
+import Register from '../components/Register'
 
 const SignUpPage = () => {
   return (
-    <div>
+    <div className="grow grid place-content-center">
       <Register />
     </div>
-  );
-};
+  )
+}
 
-export default SignUpPage;
+export default SignUpPage

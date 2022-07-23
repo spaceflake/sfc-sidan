@@ -18,17 +18,16 @@ const Navbar = () => {
 
   return (
     <nav className="navbar bg-base-300 ">
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full px-10">
         <Link href="/" passHref>
           <Image
             src="/sfclogowh.png"
             alt="SFC Logo"
             width={50}
-            height={30}
+            height={35}
             className=" cursor-pointer"
           />
         </Link>
-        <h1 className="text-xl text-white">SFC - Swedish Forza Championship</h1>
         <div className=" space-x-4">
           <Link href="/admin">ADMIN</Link>
           <Link href="/profile">PROFIL</Link>
